@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script src="/socket.io/socket.io.js"></script>
+
+
+    <script>
+
+      
+
+         const socket = io("http://localhost:3000/")
+
+        setInterval(()=>{
+
+
+            socket.on('initialList', (list) => {
+            console.log(list);
+            // Faça algo com a lista recebida
+            });
+
+            socket.on('initialListError', (error) => {
+            console.error(error);
+            // Trate o erro de acordo com suas necessidades
+            });
+
+            socket.emit('allList');
+        },1)
+       
+
+    
+
+    </script>
+</body>
+</html>
