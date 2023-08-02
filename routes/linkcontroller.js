@@ -31,7 +31,7 @@ const userController = {
         })
         
         const doc = await register.save()
-        const token = jwt.sign({id:doc._id,name:doc.name,admin:doc.admin},process.env.TOKEN_SECRET,{expiresIn:1800})
+        const token = jwt.sign({id:doc._id,name:doc.name,admin:doc.admin},process.env.TOKEN_SECRET,{expiresIn:43200})
         res.status(200).send({id:doc._id,name:doc.name,admin:doc.admin,number:doc.number,password:doc.password,token:token})
         await TokenGen.findByIdAndDelete(id)
         
@@ -61,7 +61,7 @@ const userController = {
         if(!checkUser)  
         return res.status(400).send("Number or password incorrect")
     
-        const token = jwt.sign({id:searchNumber._id,name:searchNumber.name,admin:searchNumber.admin},process.env.TOKEN_SECRET,{expiresIn:1800})
+        const token = jwt.sign({id:searchNumber._id,name:searchNumber.name,admin:searchNumber.admin},process.env.TOKEN_SECRET,{expiresIn:43200})
       
         res.status(200).send({id:searchNumber._id,name:searchNumber.name,admin:searchNumber.admin,number:searchNumber.number,token:token})
 
@@ -268,7 +268,7 @@ const userController = {
             return
             }
 
-            const token = jwt.sign({id:items._id,name:items.name,number:items.number,admin:items.admin},process.env.TOKEN_SECRET,{expiresIn:1800})
+            const token = jwt.sign({id:items._id,name:items.name,number:items.number,admin:items.admin},process.env.TOKEN_SECRET,{expiresIn:43200})
             res.status(200).send({id:items._id,name:items.name,number:items.number,admin:items.admin,token:token})
          
            
