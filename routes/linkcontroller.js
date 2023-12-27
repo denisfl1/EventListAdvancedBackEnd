@@ -111,7 +111,7 @@ const userController = {
     deleteList: async (req,res)=>{
 
     try{
-        let id = req.params.id
+        const id = req.params.id
 
         await Event.findByIdAndDelete(id)
         res.status(200).send(id)
