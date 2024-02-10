@@ -9,10 +9,8 @@ const router = require ('./routes/linkRoute')
 const path = require('path')
 const jwt = require ('jsonwebtoken')
 
-
-const schemas = require ('./routes/schemas')
-const Event = mongoose.model('Event',schemas.linkSchema1)
 const dbURI = process.env.MONGO_CONNECTION_URL 
+const SOCKET_Functions = require('./routes/iocontroller')
 
 let db = mongoose.connection
 
@@ -60,6 +58,7 @@ io.use(async(socket,next)=>{
   
   try {
   const userVerified = jwt.verify(token,process.env.TOKEN_SECRET)
+
   if(userVerified){
     next()
   }
@@ -68,55 +67,26 @@ io.use(async(socket,next)=>{
             
   }
 
+
   })
 
 
 
 io.on('connection',(socket)=>{
-const token =  socket.handshake.headers.authorization
-console.log("Usuário Connectado", socket.id)
+  const token =  socket.handshake.headers.authorization
+  console.log("Usuário Connectado", socket.id)
 
+  socket.on('allList', () => {
 
-socket.on('allList',async () => {
-
-
-  try { 
-
-    const userVerified = jwt.verify(token,process.env.TOKEN_SECRET)
-    if(userVerified){
-    let list = await  Event.find({});
-    socket.emit('initialList', list);
-   
-    }
-  } catch (error) {
-    socket.emit('initialListError', error.message);
-    console.log(error)
-
-  }
+    return SOCKET_Functions.eventList(socket,token)
   
-  });
+  })
 
-
-socket.on('participatelist',async (id) =>{
+  socket.on('participatelist', (id) =>{
  
+    return SOCKET_Functions.participateList(id,socket,token)
 
-try {
-    const userVerified = jwt.verify(token,process.env.TOKEN_SECRET)
-    if(userVerified){
-    const items = await Event.findById(id)
-    socket.emit('participate',items)
-    }
-} catch (error) {
-    socket.emit('participateerror',error.message)
-    console.log(error)
-} 
-
-})
-
-
-
-})
+  })
  
-
+})
     
- 
